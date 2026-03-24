@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>American Chronicles — Study Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#2c1f14;--bg2:#3a2a1a;--bg3:#4a3525;--panel:#3f2e1e;
+  --border:#5c4030;--border2:#7a5840;
+  --amber:#e8a020;--amber2:#c07818;--amber3:#f8c850;
+  --red:#c03030;--red2:#e04040;
+  --green:#2a7a3a;--green2:#38a050;
+  --teal:#208878;--teal2:#2aaa98;
+  --blue:#2850a0;--blue2:#4878d0;
+  --purple:#6040a0;--purple2:#8060c8;
+  --text:#f0e8d8;--text2:#a09080;--text3:#8a6a50;--cream:#f5ead8;
+  --gold:#ffd700;--silver:#c8c8d8;--bronze:#cd7f32;
+  --bebas:'Bebas Neue',sans-serif;
+  --playfair:'Playfair Display',serif;
+  --crimson:'Crimson Text',serif;
+  --dm:'DM Sans',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--crimson);min-height:100vh;
+  background-image:radial-gradient(ellipse at 15% 10%,rgba(232,160,32,.06) 0%,transparent 55%),radial-gradient(ellipse at 85% 90%,rgba(192,48,48,.04) 0%,transparent 55%);}
+body::before{content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9998;opacity:.3;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 15px rgba(232,160,32,.25)}50%{box-shadow:0 0 45px rgba(232,160,32,.65)}}
+@keyframes flip{0%{transform:rotateY(0deg)}50%{transform:rotateY(90deg)}100%{transform:rotateY(0deg)}}
+@keyframes popIn{0%{transform:scale(.8);opacity:0}70%{transform:scale(1.04)}100%{transform:scale(1);opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes celebrate{0%{transform:scale(1)}30%{transform:scale(1.06)}60%{transform:scale(.97)}100%{transform:scale(1)}}
+@keyframes shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2)}::-webkit-scrollbar-thumb:hover{background:var(--amber2)}
+
+/* ── LAYOUT ── */
+#app{max-width:720px;margin:0 auto;padding:14px 16px 60px;min-height:100vh;}
+
+/* ── TOPBAR ── */
+#topbar{display:flex;align-items:center;gap:12px;padding:10px 0 14px;border-bottom:1px solid var(--border2);margin-bottom:18px}
+.tb-back{font-family:var(--bebas);font-size:11px;letter-spacing:2px;background:transparent;border:1px solid var(--border2);color:var(--text3);padding:6px 12px;cursor:pointer;transition:all .15s;text-decoration:none;display:inline-block}
+.tb-back:hover{border-color:var(--amber);color:var(--amber)}
+.tb-title{flex:1}
+.tb-course{font-family:var(--dm);font-size:8px;color:var(--text3);letter-spacing:2px;text-transform:uppercase}
+.tb-name{font-family:var(--bebas);font-size:17px;color:var(--amber);letter-spacing:2px;line-height:1.1}
+.tb-sub{font-family:var(--crimson);font-size:11px;color:var(--text2);font-style:italic}
+.mode-toggle{display:flex;border:1px solid var(--border2);overflow:hidden}
+.mode-btn{font-family:var(--bebas);font-size:10px;letter-spacing:1px;padding:7px 14px;cursor:pointer;background:transparent;border:none;color:var(--text3);transition:all .15s}
+.mode-btn.active{background:var(--amber);color:var(--bg)}
+.mode-btn:hover:not(.active){color:var(--amber)}
+
+/* ── DECK SELECT ── */
+#deck-select-screen{animation:fadeIn .4s ease}
+.ds-hero{background:linear-gradient(135deg,rgba(40,20,10,.98),rgba(20,12,6,.99));border:1px solid var(--border2);border-left:3px solid var(--amber);padding:18px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.ds-hero-icon{font-size:38px;flex-shrink:0;filter:drop-shadow(0 0 10px rgba(232,160,32,.35))}
+.ds-title{font-family:var(--bebas);font-size:22px;color:var(--amber);letter-spacing:3px}
+.ds-sub{font-family:var(--crimson);font-size:13px;color:var(--text2);font-style:italic;margin-top:2px}
+.deck-filter{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.df-btn{font-family:var(--bebas);font-size:9px;letter-spacing:1px;padding:5px 11px;cursor:pointer;border:1px solid var(--border2);color:var(--text3);background:transparent;transition:all .15s}
+.df-btn.active{border-color:var(--amber);color:var(--amber);background:rgba(232,160,32,.07)}
+.deck-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.deck-card{background:var(--bg2);border:1px solid var(--border);padding:13px 14px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
+.deck-card:hover{border-color:var(--amber2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.deck-card-type{font-family:var(--dm);font-size:7px;color:var(--text3);letter-spacing:2px;margin-bottom:4px;text-transform:uppercase}
+.deck-card-title{font-family:var(--playfair);font-size:13px;color:var(--cream);line-height:1.3;margin-bottom:3px}
+.deck-card-sub{font-family:var(--crimson);font-size:11px;color:var(--text2);font-style:italic;line-height:1.4}
+.deck-card-meta{display:flex;gap:8px;margin-top:8px;font-family:var(--dm);font-size:8px;color:var(--text3)}
+.deck-tag{padding:2px 7px;border:1px solid var(--border);background:var(--bg3)}
+.deck-passed-badge{position:absolute;top:8px;right:8px;font-family:var(--bebas);font-size:8px;letter-spacing:1px;background:var(--green);color:#fff;padding:2px 7px}
+
+/* ── STUDY MODE ── */
+#study-screen{animation:fadeIn .3s ease}
+.study-progress-bar{height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin-bottom:18px}
+.study-progress-fill{height:100%;background:linear-gradient(90deg,var(--amber2),var(--amber3));transition:width .4s;border-radius:2px}
+.study-count{font-family:var(--dm);font-size:9px;color:var(--text3);letter-spacing:1px;text-align:center;margin-bottom:14px}
+
+/* ── FLASHCARD ── */
+.flashcard-wrap{perspective:1000px;margin-bottom:20px;cursor:pointer}
+.flashcard{width:100%;min-height:220px;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);border-radius:0}
+.flashcard.flipped{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 30px;border:1px solid var(--border2);background:var(--bg2)}
+.fc-front{border-left:3px solid var(--amber)}
+.fc-back{transform:rotateY(180deg);border-left:3px solid var(--teal2);background:var(--bg3)}
+.fc-label{font-family:var(--bebas);font-size:8px;letter-spacing:3px;color:var(--text3);margin-bottom:10px;align-self:flex-start}
+.fc-term{font-family:var(--playfair);font-size:clamp(18px,3.5vw,26px);color:var(--cream);text-align:center;line-height:1.35;font-weight:700}
+.fc-definition{font-family:var(--crimson);font-size:clamp(14px,2.5vw,17px);color:var(--text);text-align:center;line-height:1.7}
+.fc-tags{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:12px}
+.fc-tag{font-family:var(--dm);font-size:7px;padding:2px 7px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text3)}
+.fc-hint{font-family:var(--dm);font-size:8px;color:var(--text3);text-align:center;margin-top:8px;opacity:.6}
+
+/* flashcard needs min-height hack for absolute positioning */
+.flashcard-wrap{min-height:220px;position:relative}
+.flashcard{min-height:220px}
+.fc-face{min-height:220px}
+
+.study-controls{display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.study-nav{display:flex;gap:6px}
+
+/* self-rating */
+.rating-block{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--border)}
+.rating-lbl{font-family:var(--bebas);font-size:9px;color:var(--text3);letter-spacing:2px;width:100%;text-align:center;margin-bottom:4px}
+.rate-btn{font-family:var(--bebas);font-size:10px;letter-spacing:1px;padding:6px 14px;cursor:pointer;border:1px solid;background:transparent;transition:all .15s}
+.rate-easy{border-color:var(--green2);color:var(--green2)}.rate-easy:hover{background:var(--green2);color:#fff}
+.rate-ok{border-color:var(--amber2);color:var(--amber2)}.rate-ok:hover{background:var(--amber2);color:var(--bg)}
+.rate-hard{border-color:var(--red2);color:var(--red2)}.rate-hard:hover{background:var(--red2);color:#fff}
+
+/* ── QUIZ MODE ── */
+#quiz-screen{animation:fadeIn .3s ease}
+.quiz-header{background:var(--bg2);border:1px solid var(--border2);border-left:3px solid var(--blue2);padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.quiz-q-num{font-family:var(--bebas);font-size:28px;color:var(--blue2);flex-shrink:0;line-height:1}
+.quiz-q-label{font-family:var(--dm);font-size:8px;color:var(--text3);letter-spacing:2px}
+.quiz-q-of{font-family:var(--bebas);font-size:11px;color:var(--text3)}
+.quiz-progress-bar{height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin-bottom:18px}
+.quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue2));transition:width .4s;border-radius:2px}
+
+.quiz-question{font-family:var(--playfair);font-size:clamp(15px,3vw,19px);color:var(--cream);line-height:1.55;margin-bottom:18px;padding:16px 18px;background:var(--bg2);border:1px solid var(--border2);font-style:italic}
+.quiz-choices{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.quiz-choice{background:var(--bg2);border:1.5px solid var(--border);padding:13px 16px;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:12px;font-family:var(--dm);font-size:13px;color:var(--text2);line-height:1.45}
+.quiz-choice:hover:not(.answered){border-color:var(--amber2);color:var(--cream);background:rgba(232,160,32,.04)}
+.quiz-choice.correct{border-color:var(--green2);background:rgba(56,160,80,.1);color:var(--green2)}
+.quiz-choice.wrong{border-color:var(--red2);background:rgba(192,48,48,.1);color:var(--red2);animation:shake .4s ease}
+.quiz-choice.missed{border-color:var(--green2);background:rgba(56,160,80,.06);color:var(--text3)}
+.choice-letter{font-family:var(--bebas);font-size:14px;letter-spacing:1px;flex-shrink:0;width:20px;margin-top:1px}
+.quiz-feedback{padding:10px 14px;font-family:var(--dm);font-size:11px;line-height:1.6;border-left:3px solid;margin-bottom:14px;animation:fadeIn .25s ease}
+.quiz-feedback.fb-correct{border-color:var(--green2);background:rgba(56,160,80,.07);color:var(--green2)}
+.quiz-feedback.fb-wrong{border-color:var(--red2);background:rgba(192,48,48,.07);color:var(--text2)}
+
+/* ── RESULTS ── */
+#results-screen{animation:popIn .45s ease}
+.results-hero{text-align:center;padding:28px 20px 20px;background:var(--bg2);border:1px solid var(--border2);margin-bottom:18px;position:relative;overflow:hidden}
+.results-grade{font-family:var(--bebas);font-size:72px;letter-spacing:4px;line-height:1}
+.results-label{font-family:var(--bebas);font-size:14px;letter-spacing:4px;margin-bottom:10px}
+.results-score-row{font-family:var(--dm);font-size:11px;color:var(--text2)}
+.reward-block{background:linear-gradient(135deg,rgba(20,14,4,.99),rgba(13,10,3,.99));border:1px solid var(--amber2);border-left:3px solid var(--gold);padding:16px 18px;margin-bottom:14px;animation:celebrate .5s ease .2s both}
+.reward-title{font-family:var(--bebas);font-size:11px;color:var(--text3);letter-spacing:3px;margin-bottom:10px}
+.reward-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.reward-icon{font-size:22px;flex-shrink:0}
+.reward-amount{font-family:var(--bebas);font-size:28px;color:var(--gold);letter-spacing:2px;line-height:1}
+.reward-desc{font-family:var(--dm);font-size:9px;color:var(--text3);line-height:1.5}
+.no-reward-block{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--red2);padding:14px 16px;margin-bottom:14px}
+.results-breakdown{background:var(--bg2);border:1px solid var(--border);margin-bottom:14px}
+.rb-row{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.03)}
+.rb-row:last-child{border-bottom:none}
+.rb-icon{font-size:12px;flex-shrink:0;margin-top:2px}
+.rb-q{font-family:var(--crimson);font-size:13px;color:var(--text2);flex:1;line-height:1.4;font-style:italic}
+.rb-ans{font-family:var(--dm);font-size:9px;margin-top:3px}
+.rb-correct{color:var(--green2)}.rb-wrong{color:var(--red2)}
+
+/* ── BUTTONS ── */
+.btn{font-family:var(--bebas);font-size:14px;letter-spacing:2px;background:transparent;border:1.5px solid var(--amber);color:var(--amber);padding:11px 24px;cursor:pointer;transition:all .2s;display:inline-block;position:relative;overflow:hidden;text-transform:uppercase}
+.btn::before{content:'';position:absolute;inset:0;background:var(--amber);transform:scaleX(0);transform-origin:left;transition:transform .2s;z-index:0}
+.btn:hover{color:var(--bg);box-shadow:0 0 22px rgba(232,160,32,.35)}.btn:hover::before{transform:scaleX(1)}
+.btn span,.btn-inner{position:relative;z-index:1}.btn:active{transform:scale(.97)}
+.btn.full{display:block;width:100%;text-align:center}.btn.sm{font-size:11px;padding:7px 16px}
+.btn.green{border-color:var(--green2);color:var(--green2)}.btn.green::before{background:var(--green2)}.btn.green:hover{color:#fff}
+.btn.blue{border-color:var(--blue2);color:var(--blue2)}.btn.blue::before{background:var(--blue2)}.btn.blue:hover{color:#fff}
+.btn.teal{border-color:var(--teal2);color:var(--teal2)}.btn.teal::before{background:var(--teal2)}.btn.teal:hover{color:#fff}
+.btn.red{border-color:var(--red2);color:var(--red2)}.btn.red::before{background:var(--red2)}.btn.red:hover{color:#fff}
+
+.sh{font-family:var(--bebas);font-size:15px;letter-spacing:2px;color:var(--amber);border-bottom:1px solid var(--border2);padding-bottom:5px;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.sh::before{content:'';display:block;width:3px;height:15px;background:var(--amber)}
+
+/* notification */
+.notif{position:fixed;bottom:80px;right:16px;background:var(--bg2);border:1px solid var(--amber2);border-left:3px solid var(--amber);color:var(--amber);font-family:var(--bebas);font-size:12px;letter-spacing:2px;padding:10px 16px;z-index:9999;animation:fadeUp .3s ease;max-width:280px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="topbar">
+    <a id="back-btn" href="javascript:history.back()" class="tb-back">← Hub</a>
+    <div class="tb-title">
+      <div class="tb-course">American Chronicles · U.S. History</div>
+      <div class="tb-name" id="tb-name">Study Deck</div>
+      <div class="tb-sub" id="tb-sub"></div>
+    </div>
+    <div class="mode-toggle" id="mode-toggle" style="display:none">
+      <button class="mode-btn" id="mt-study" onclick="switchMode('study')">🃏 Study</button>
+      <button class="mode-btn" id="mt-quiz" onclick="switchMode('quiz')">⚡ Quiz</button>
+    </div>
+  </div>
+
+  <!-- DECK SELECT -->
+  <div id="deck-select-screen" style="display:none">
+    <div class="ds-hero">
+      <div class="ds-hero-icon">📚</div>
+      <div>
+        <div class="ds-title">Select a Deck</div>
+        <div class="ds-sub">Choose a unit or theme to study. Your progress is saved.</div>
+      </div>
+    </div>
+    <div class="deck-filter" id="deck-filter"></div>
+    <div class="deck-list" id="deck-list"></div>
+  </div>
+
+  <!-- STUDY MODE -->
+  <div id="study-screen" style="display:none">
+    <div class="study-progress-bar"><div class="study-progress-fill" id="study-prog-fill" style="width:0%"></div></div>
+    <div class="study-count" id="study-count"></div>
+    <div class="flashcard-wrap" id="fc-wrap" onclick="flipCard()">
+      <div class="flashcard" id="flashcard">
+        <div class="fc-face fc-front">
+          <div class="fc-label">TERM</div>
+          <div class="fc-term" id="fc-term"></div>
+          <div class="fc-hint">Click to reveal definition →</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-label">DEFINITION</div>
+          <div class="fc-definition" id="fc-def"></div>
+          <div class="fc-tags" id="fc-tags"></div>
+        </div>
+      </div>
+    </div>
+    <div class="study-controls">
+      <div class="study-nav">
+        <button class="btn sm" id="prev-btn" onclick="prevCard()"><span>← Prev</span></button>
+        <button class="btn sm" onclick="shuffleCards()"><span>⇌ Shuffle</span></button>
+        <button class="btn sm" id="next-btn" onclick="nextCard()"><span>Next →</span></button>
+      </div>
+    </div>
+    <div class="rating-block">
+      <div class="rating-lbl">How well did you know this?</div>
+      <button class="rate-btn rate-hard" onclick="rateCard('hard',event)"><span>😓 Hard</span></button>
+      <button class="rate-btn rate-ok" onclick="rateCard('ok',event)"><span>🤔 Getting It</span></button>
+      <button class="rate-btn rate-easy" onclick="rateCard('easy',event)"><span>✅ Got It</span></button>
+    </div>
+    <div style="margin-top:18px">
+      <button class="btn full blue" onclick="switchMode('quiz')"><span>⚡ Ready? Take the Vocab Check</span></button>
+    </div>
+  </div>
+
+  <!-- QUIZ MODE -->
+  <div id="quiz-screen" style="display:none">
+    <div class="quiz-header">
+      <div>
+        <div class="quiz-q-label">QUESTION</div>
+        <div class="quiz-q-num" id="quiz-q-num">1</div>
+      </div>
+      <div style="flex:1">
+        <div class="quiz-q-of" id="quiz-q-of">of 0</div>
+        <div style="font-family:var(--dm);font-size:9px;color:var(--text3);margin-top:2px">Vocab Check · Multiple Choice</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:var(--bebas);font-size:9px;color:var(--text3);letter-spacing:1px">SCORE</div>
+        <div style="font-family:var(--bebas);font-size:20px;color:var(--amber)" id="quiz-live-score">0</div>
+      </div>
+    </div>
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-prog-fill" style="width:0%"></div></div>
+    <div class="quiz-question" id="quiz-question"></div>
+    <div class="quiz-choices" id="quiz-choices"></div>
+    <div id="quiz-feedback" style="display:none"></div>
+    <button class="btn full" id="quiz-next-btn" onclick="nextQuestion()" style="display:none"><span>Next Question →</span></button>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-screen" style="display:none"></div>
+</div>
+
+<script>
+'use strict';
+
+// ══════════════════════════════════════════════════════
+//  DECK DATA — JSON-driven vocabulary system
+//  Add new decks here to scale the system
+// ══════════════════════════════════════════════════════
+const DECK_DATA = {
+  meta: {
+    version: 1,
+    course: "U.S. History",
+    defaultMasteryThreshold: 0.8
+  },
+  decks: {
+
+    // ── FOUNDATION BRIDGE ────────────────────────────
+    "foundation_bridge": {
+      id: "foundation_bridge",
+      type: "bridge",
+      courseUnit: "Unit 0",
+      title: "Foundation: Lead-Up to the Civil War",
+      subtitle: "Bridge deck — sectional conflict, westward expansion, and the road to war",
+      hubLabel: "Study Flashcards",
+      reward: { firstPass:{gold:20,xp:10}, repeatPass:{gold:5,xp:0}, masteryThreshold:0.8, minQuestionsSeen:4 },
+      flashcards: [
+        {id:"fb_1",term:"Manifest Destiny",definition:"The widely-held belief that American settlers were destined — even divinely ordained — to expand across North America from the Atlantic to the Pacific coast.",tags:["westward-expansion","causes"]},
+        {id:"fb_2",term:"Missouri Compromise (1820)",definition:"An agreement admitting Missouri as a slave state and Maine as a free state, and banning slavery north of the 36°30' line in the Louisiana Territory.",tags:["slavery","compromise","sectional"]},
+        {id:"fb_3",term:"Compromise of 1850",definition:"A package of five laws meant to resolve territorial disputes after the Mexican-American War, including admitting California as a free state and strengthening the Fugitive Slave Act.",tags:["slavery","compromise","sectional"]},
+        {id:"fb_4",term:"Kansas-Nebraska Act (1854)",definition:"A law that repealed the Missouri Compromise and allowed settlers in Kansas and Nebraska to decide the slavery question through popular sovereignty, leading to violent conflict known as 'Bleeding Kansas.'",tags:["slavery","popular-sovereignty","causes"]},
+        {id:"fb_5",term:"Popular Sovereignty",definition:"The principle that settlers of a territory should decide for themselves whether to allow slavery, rather than having Congress decide.",tags:["democracy","slavery","causes"]},
+        {id:"fb_6",term:"Dred Scott v. Sandford (1857)",definition:"A Supreme Court ruling that enslaved people were property, not citizens, that Congress had no power to ban slavery in territories, and that the Missouri Compromise was unconstitutional.",tags:["slavery","supreme-court","causes"]},
+        {id:"fb_7",term:"John Brown's Raid (1859)",definition:"An abolitionist's attempt to start a slave rebellion by seizing the federal arsenal at Harpers Ferry, Virginia. Brown was captured and executed, but his raid intensified sectional tensions.",tags:["abolitionism","violence","causes"]},
+        {id:"fb_8",term:"Secession",definition:"The formal withdrawal of a state from the United States. South Carolina was the first to secede in December 1860, followed by ten more Southern states forming the Confederacy.",tags:["civil-war","confederacy","causes"]}
+      ],
+      quiz: [
+        {id:"fb_q1",question:"What was 'Manifest Destiny'?",choices:["The belief that the U.S. was destined to expand across North America","A plan to divide the country into free and slave regions forever","A court ruling against slavery in the territories","A compromise that admitted California as a slave state"],correctAnswer:0},
+        {id:"fb_q2",question:"What did the Kansas-Nebraska Act (1854) do to the Missouri Compromise?",choices:["Strengthened it by adding more free states","Repealed it and replaced it with popular sovereignty","Had no effect on it","Made it apply to all new territories"],correctAnswer:1},
+        {id:"fb_q3",question:"What was the key ruling in Dred Scott v. Sandford (1857)?",choices:["Enslaved people were citizens with full legal rights","Congress could ban slavery anywhere it chose","Enslaved people were property, not citizens, and Congress couldn't ban slavery in territories","The Missouri Compromise was constitutional and must stand"],correctAnswer:2},
+        {id:"fb_q4",question:"What is 'popular sovereignty' as it applied to slavery in new territories?",choices:["Congress votes on whether each territory allows slavery","The President decides each territory's status","Settlers of the territory vote to decide whether to allow slavery","The Supreme Court rules on slavery territory by territory"],correctAnswer:2},
+        {id:"fb_q5",question:"Which event MOST directly triggered the secession of Southern states in 1860–1861?",choices:["John Brown's Raid on Harpers Ferry","The passage of the Fugitive Slave Act","The election of Abraham Lincoln as President","The Dred Scott decision"],correctAnswer:2},
+        {id:"fb_q6",question:"The Compromise of 1850 included which controversial measure that angered Northerners?",choices:["The annexation of Texas as a slave state","A strengthened Fugitive Slave Act requiring Northerners to return escaped enslaved people","Admission of California as a slave state","Prohibition of slavery north of 36°30'"],correctAnswer:1}
+      ]
+    },
+
+    // ── UNIT 1: CIVIL WAR & RECONSTRUCTION ──────────
+    "unit1_civil_war_reconstruction": {
+      id: "unit1_civil_war_reconstruction",
+      type: "unit",
+      courseUnit: "Unit 1",
+      title: "Unit 1: Civil War & Reconstruction",
+      subtitle: "War, emancipation, constitutional change, and the unfinished struggle for equality",
+      hubLabel: "Study Flashcards",
+      reward: { firstPass:{gold:30,xp:15}, repeatPass:{gold:8,xp:0}, masteryThreshold:0.8, minQuestionsSeen:6 },
+      flashcards: [
+        {id:"u1_1",term:"Emancipation Proclamation (1863)",definition:"President Lincoln's executive order declaring that all enslaved people in Confederate-held territory were free. It didn't free all enslaved people immediately but transformed the war's meaning and allowed Black men to enlist in the Union Army.",tags:["civil-war","lincoln","slavery","emancipation"]},
+        {id:"u1_2",term:"13th Amendment (1865)",definition:"Constitutional amendment that abolished slavery throughout the United States. It permanently ended the institution that had existed since colonial times.",tags:["reconstruction","slavery","amendments","freedom"]},
+        {id:"u1_3",term:"14th Amendment (1868)",definition:"Constitutional amendment granting citizenship to all persons born or naturalized in the U.S. (overturning Dred Scott) and guaranteeing equal protection under the law.",tags:["reconstruction","citizenship","amendments","equality"]},
+        {id:"u1_4",term:"15th Amendment (1870)",definition:"Constitutional amendment prohibiting the denial of voting rights based on race, color, or previous condition of servitude — giving Black men the right to vote.",tags:["reconstruction","voting-rights","amendments","equality"]},
+        {id:"u1_5",term:"Freedmen's Bureau",definition:"A federal agency created in 1865 to help formerly enslaved people and poor white Southerners by providing food, housing, education, and legal help. It represented the federal government's first major social welfare program.",tags:["reconstruction","freedpeople","federal-government"]},
+        {id:"u1_6",term:"Radical Reconstruction",definition:"The phase of Reconstruction (1867–1877) in which Congress took control from President Johnson, divided the South into military districts, and required states to ratify the 14th Amendment and allow Black men to vote before rejoining the Union.",tags:["reconstruction","congress","radical-republicans"]},
+        {id:"u1_7",term:"Sharecropping",definition:"A labor system that emerged after slavery in which freedpeople and poor whites farmed land owned by others in exchange for a share of the crop. Debt cycles kept many in a form of economic bondage despite legal freedom.",tags:["reconstruction","economy","freedpeople","continuity"]},
+        {id:"u1_8",term:"Black Codes",definition:"Laws passed by Southern states immediately after the Civil War to restrict the rights and freedoms of formerly enslaved people — limiting their movement, work options, and legal rights — effectively recreating slavery-like conditions.",tags:["reconstruction","racism","southern-resistance"]},
+        {id:"u1_9",term:"Compromise of 1877",definition:"An informal agreement that ended the contested 1876 presidential election by giving Republican Rutherford B. Hayes the presidency in exchange for withdrawing federal troops from the South, effectively ending Reconstruction.",tags:["reconstruction","compromise","end-of-reconstruction"]},
+        {id:"u1_10",term:"Jim Crow Laws",definition:"State and local laws enacted after Reconstruction that enforced racial segregation and white supremacy across the South, lasting from the 1870s until the Civil Rights Act of 1964.",tags:["continuity","racism","segregation"]}
+      ],
+      quiz: [
+        {id:"u1_q1",question:"What did the Emancipation Proclamation (1863) actually do?",choices:["It immediately freed all enslaved people everywhere in the U.S.","It freed enslaved people in Confederate-held territory and let Black men join the Union Army","It granted citizenship to all formerly enslaved people","It abolished slavery permanently via constitutional amendment"],correctAnswer:1},
+        {id:"u1_q2",question:"Which Reconstruction Amendment granted citizenship and equal protection under the law?",choices:["13th Amendment","14th Amendment","15th Amendment","1st Amendment"],correctAnswer:1},
+        {id:"u1_q3",question:"The 13th Amendment's most immediate effect was to:",choices:["Grant Black men the right to vote","Abolish slavery throughout the United States","Create the Freedmen's Bureau","Divide the South into military districts"],correctAnswer:1},
+        {id:"u1_q4",question:"How did sharecropping undermine the freedom that emancipation promised?",choices:["It forced formerly enslaved people to move north","Debt cycles trapped freedpeople in economic bondage despite legal freedom","It prevented freedpeople from voting","It forced freedpeople into military service"],correctAnswer:1},
+        {id:"u1_q5",question:"What was the PRIMARY purpose of Black Codes passed by Southern states after the Civil War?",choices:["To provide education and housing for freedpeople","To restrict freedpeople's rights and recreate slavery-like conditions","To welcome freedpeople as full citizens","To ensure equal pay for freedpeople's labor"],correctAnswer:1},
+        {id:"u1_q6",question:"What was the practical effect of the Compromise of 1877 on Black Southerners?",choices:["It strengthened federal protection of their rights","It ended Reconstruction by withdrawing federal troops, leaving them vulnerable to white supremacist violence","It granted them land ownership through the Freedmen's Bureau","It extended Radical Reconstruction for another decade"],correctAnswer:1},
+        {id:"u1_q7",question:"Which element of Reconstruction represented the MOST revolutionary change for American democracy?",choices:["The creation of military districts in the South","Black men holding elected office for the first time in American history","The construction of new Southern railroads","The pardoning of Confederate officers"],correctAnswer:1},
+        {id:"u1_q8",question:"The Freedmen's Bureau is historically significant because it was:",choices:["The first federal agency ever created in the United States","The first major federal social welfare program, providing aid to freed people and poor whites","The agency that wrote the 14th Amendment","A military court that tried Confederate war criminals"],correctAnswer:1}
+      ]
+    },
+
+    // ── UNIT 2A: BOOMTOWN NATION ─────────────────────
+    "unit2a_boomtown": {
+      id: "unit2a_boomtown",
+      type: "unit",
+      courseUnit: "Unit 2A",
+      title: "Unit 2A: Boomtown Nation",
+      subtitle: "Industrialization, railroads, Gilded Age inequality, and Native displacement",
+      hubLabel: "Study Flashcards",
+      reward: { firstPass:{gold:30,xp:15}, repeatPass:{gold:8,xp:0}, masteryThreshold:0.8, minQuestionsSeen:6 },
+      flashcards: [
+        {id:"u2a_1",term:"Transcontinental Railroad",definition:"A railroad network completed in 1869 connecting the Atlantic and Pacific coasts. It transformed commerce and migration but was built largely by Chinese and Irish immigrant labor under dangerous conditions.",tags:["industry","immigration","technology"]},
+        {id:"u2a_2",term:"Robber Barons",definition:"A critical term for industrial tycoons like Carnegie (steel), Rockefeller (oil), and Vanderbilt (railroads) who accumulated massive wealth through monopolies and exploitation of workers.",tags:["industry","wealth-inequality","capitalism"]},
+        {id:"u2a_3",term:"Social Darwinism",definition:"The misapplication of Darwin's theory of evolution to human society, arguing that wealth and poverty reflected natural selection — that the rich 'deserved' success and the poor deserved their fate.",tags:["ideology","wealth-inequality","gilded-age"]},
+        {id:"u2a_4",term:"Homestead Act (1862)",definition:"A law offering 160 acres of public land to settlers who agreed to farm it for 5 years — accelerating westward migration but often benefiting land speculators more than actual farmers.",tags:["westward-expansion","agriculture","land"]},
+        {id:"u2a_5",term:"Populism",definition:"A political movement of the 1890s representing farmers and working-class Americans who demanded government regulation of railroads, a graduated income tax, and direct election of senators.",tags:["reform","farmers","third-party"]},
+        {id:"u2a_6",term:"Dawes Act (1887)",definition:"A law that broke up tribal lands into individual allotments for Native Americans in an attempt to force assimilation. It destroyed tribal culture and resulted in the loss of 90 million acres of Native land.",tags:["native-americans","displacement","assimilation"]}
+      ],
+      quiz: [
+        {id:"u2a_q1",question:"What was Social Darwinism's main justification for extreme inequality in the Gilded Age?",choices:["Government policy created unfair advantages for the wealthy","Wealth and poverty reflected natural selection — the fittest survived and thrived","Immigrants took jobs from deserving Americans","Labor unions drove down wages for everyone"],correctAnswer:1},
+        {id:"u2a_q2",question:"The Populist movement primarily represented which group?",choices:["Industrial factory workers in Northern cities","Southern plantation owners","Farmers and rural working-class Americans demanding government regulation","Recent immigrants seeking citizenship rights"],correctAnswer:2},
+        {id:"u2a_q3",question:"The Dawes Act (1887) was designed to do what to Native Americans?",choices:["Protect tribal sovereignty and land rights","Force assimilation by breaking up tribal lands into individual plots","Create reservations separate from American society","Compensate tribes for land taken during westward expansion"],correctAnswer:1},
+        {id:"u2a_q4",question:"What labor groups built the Transcontinental Railroad under dangerous conditions?",choices:["Freed enslaved people from the South","Primarily Chinese and Irish immigrant workers","American-born factory workers","Army veterans from the Civil War"],correctAnswer:1},
+        {id:"u2a_q5",question:"Which best describes the 'Robber Barons' of the Gilded Age?",choices:["Politicians who accepted bribes from industry","Industrialists who built monopolies and accumulated enormous wealth","Foreign investors who took profits out of the U.S.","Labor leaders who used violence to win strikes"],correctAnswer:1},
+        {id:"u2a_q6",question:"The Homestead Act was meant to promote settlement, but in practice it often benefited:",choices:["Small family farmers as intended","Large land speculators more than actual settlers","Native American tribes who kept their land","Industrial corporations building railroads"],correctAnswer:1}
+      ]
+    },
+
+    // ── UNIT 2B: AGE OF REFORM ───────────────────────
+    "unit2b_reform": {
+      id: "unit2b_reform",
+      type: "unit",
+      courseUnit: "Unit 2B",
+      title: "Unit 2B: Age of Reform",
+      subtitle: "Muckrakers, Progressivism, suffrage, and who gets left out of 'the public good'",
+      hubLabel: "Study Flashcards",
+      reward: { firstPass:{gold:30,xp:15}, repeatPass:{gold:8,xp:0}, masteryThreshold:0.8, minQuestionsSeen:5 },
+      flashcards: [
+        {id:"u2b_1",term:"Muckrakers",definition:"Investigative journalists who exposed corruption, unsafe conditions, and social injustice. Key figures included Upton Sinclair (The Jungle), Ida B. Wells (lynching), and Jacob Riis (tenement life).",tags:["journalism","reform","progressive-era"]},
+        {id:"u2b_2",term:"Progressive Era",definition:"A period of widespread reform (roughly 1890s–1920s) targeting corruption, unsafe working conditions, child labor, and political machines, driven largely by a growing middle class.",tags:["reform","government","progressive-era"]},
+        {id:"u2b_3",term:"19th Amendment (1920)",definition:"Constitutional amendment granting women the right to vote after decades of organizing by the women's suffrage movement. Notable leaders included Susan B. Anthony and Elizabeth Cady Stanton.",tags:["women","voting-rights","amendments","reform"]},
+        {id:"u2b_4",term:"NAACP",definition:"The National Association for the Advancement of Colored People, founded in 1909 by Ida B. Wells, W.E.B. Du Bois, and others to fight racial discrimination through legal challenges and public advocacy.",tags:["civil-rights","racism","organization"]},
+        {id:"u2b_5",term:"Trust-Busting",definition:"President Theodore Roosevelt's aggressive use of the Sherman Antitrust Act to break up business monopolies (trusts), earning him the nickname 'Trust Buster.' Famous cases included Standard Oil and Northern Securities.",tags:["government","capitalism","roosevelt"]}
+      ],
+      quiz: [
+        {id:"u2b_q1",question:"What role did muckrakers play in the Progressive Era?",choices:["They organized labor unions and led strikes","They exposed corruption and injustice through investigative journalism, spurring reform","They ran for political office to challenge party machines","They filed lawsuits against corporations in federal court"],correctAnswer:1},
+        {id:"u2b_q2",question:"Progressive Era reforms largely ignored the rights of which group, revealing a significant limit of the movement?",choices:["Women workers in factories","Recent European immigrants","African Americans, who remained subject to Jim Crow laws","Child workers in coal mines"],correctAnswer:1},
+        {id:"u2b_q3",question:"What did the 19th Amendment accomplish?",choices:["Granted citizenship to women","Gave women the right to vote","Prohibited discrimination in employment based on gender","Required equal pay for women"],correctAnswer:1},
+        {id:"u2b_q4",question:"The NAACP was founded primarily to:",choices:["Provide economic support to Black communities","Fight racial discrimination through legal challenges and advocacy","Organize Black workers into labor unions","Lobby for a constitutional amendment banning lynching"],correctAnswer:1},
+        {id:"u2b_q5",question:"Theodore Roosevelt's 'trust-busting' targeted which economic problem?",choices:["Foreign companies undercutting American workers","Business monopolies that crushed competition and exploited consumers","Government corruption in awarding contracts","Banks that charged excessive interest rates"],correctAnswer:1}
+      ]
+    },
+
+    // ── UNIT 5A: WWII ────────────────────────────────
+    "unit5a_wwii": {
+      id: "unit5a_wwii",
+      type: "unit",
+      courseUnit: "Unit 5A",
+      title: "Unit 5A: Arsenal of Democracy",
+      subtitle: "WWII — causes, home front, Japanese internment, and the atomic age",
+      hubLabel: "Study Flashcards",
+      reward: { firstPass:{gold:30,xp:15}, repeatPass:{gold:8,xp:0}, masteryThreshold:0.8, minQuestionsSeen:5 },
+      flashcards: [
+        {id:"u5a_1",term:"Japanese Internment (Executive Order 9066)",definition:"FDR's 1942 order forcing approximately 120,000 Japanese Americans — most of them U.S. citizens — into internment camps after Pearl Harbor due to war hysteria and racial prejudice.",tags:["civil-liberties","racism","wwii","home-front"]},
+        {id:"u5a_2",term:"Manhattan Project",definition:"The secret U.S. government program (1942–1945) to develop atomic weapons, leading to the bombs dropped on Hiroshima and Nagasaki in August 1945, killing an estimated 129,000–226,000 people.",tags:["atomic-bomb","technology","wwii","ethical-debate"]},
+        {id:"u5a_3",term:"D-Day (June 6, 1944)",definition:"The Allied invasion of Nazi-occupied France at Normandy Beach, the largest seaborne invasion in history. It opened a Western Front that led to Germany's defeat less than a year later.",tags:["wwii","military","europe"]},
+        {id:"u5a_4",term:"The Holocaust",definition:"The systematic genocide of six million Jews and millions of others (Roma, disabled people, political opponents, LGBTQ+ people) by Nazi Germany — the most documented genocide in history.",tags:["wwii","genocide","moral-reckoning"]},
+        {id:"u5a_5",term:"Rosie the Riveter",definition:"A cultural icon representing the 6 million women who entered the industrial workforce during WWII while men served overseas. Women's wartime work challenged traditional gender roles, though most were pushed out after the war.",tags:["home-front","gender","women","wwii"]}
+      ],
+      quiz: [
+        {id:"u5a_q1",question:"What was the primary justification the U.S. government used for Japanese American internment?",choices:["Actual evidence of Japanese American espionage","Military necessity and national security — even though most were U.S. citizens with no evidence against them","A Supreme Court ruling requiring all enemy nationals be detained","A treaty obligation with Japan's enemies"],correctAnswer:1},
+        {id:"u5a_q2",question:"The Manhattan Project resulted in:",choices:["A new type of conventional bomb used in Europe","The development and use of atomic weapons on Hiroshima and Nagasaki","A rocket program that sent satellites into orbit","The creation of nuclear power plants across the U.S."],correctAnswer:1},
+        {id:"u5a_q3",question:"What was the significance of 'Rosie the Riveter' as a cultural figure?",choices:["She represented women who spied for the Allies during the war","She represented millions of women who entered industrial jobs during WWII, challenging gender norms","She was a real nurse who served on the frontlines in Europe","She symbolized women's role in protesting the war"],correctAnswer:1},
+        {id:"u5a_q4",question:"The Holocaust is historically significant as a warning about:",choices:["The dangers of nuclear weapons","How modern states with bureaucratic systems can carry out systematic genocide","Why democracies shouldn't fight aggressive wars","The failure of international trade to prevent conflict"],correctAnswer:1},
+        {id:"u5a_q5",question:"What strategic goal did the D-Day invasion of Normandy accomplish?",choices:["It ended the war in the Pacific by cutting off Japan's oil supply","It opened a Western Front in Europe, relieving Soviet pressure and accelerating Nazi Germany's defeat","It liberated concentration camps and ended the Holocaust","It allowed the Allies to capture Berlin directly"],correctAnswer:1}
+      ]
+    },
+
+    // ── UNIT 6: CIVIL RIGHTS ─────────────────────────
+    "unit6_civil_rights": {
+      id: "unit6_civil_rights",
+      type: "unit",
+      courseUnit: "Unit 6",
+      title: "Unit 6: Chronicles of Change",
+      subtitle: "The Civil Rights Movement — from Brown to the Voting Rights Act",
+      hubLabel: "Study Flashcards",
+      reward: { firstPass:{gold:30,xp:15}, repeatPass:{gold:8,xp:0}, masteryThreshold:0.8, minQuestionsSeen:6 },
+      flashcards: [
+        {id:"u6_1",term:"Brown v. Board of Education (1954)",definition:"Landmark Supreme Court case that unanimously declared racial segregation in public schools unconstitutional, overturning Plessy v. Ferguson's 'separate but equal' doctrine.",tags:["supreme-court","segregation","civil-rights","education"]},
+        {id:"u6_2",term:"Montgomery Bus Boycott (1955–56)",definition:"A 381-day boycott of segregated city buses in Montgomery, Alabama, triggered by Rosa Parks' arrest. Led by a 26-year-old Dr. Martin Luther King Jr., it was one of the first major victories of the modern Civil Rights Movement.",tags:["civil-rights","nonviolent-resistance","mlk","rosa-parks"]},
+        {id:"u6_3",term:"Sit-ins",definition:"A nonviolent protest tactic in which demonstrators sat at segregated lunch counters and refused to leave when denied service. The Greensboro sit-ins (1960) spread nationally and helped found SNCC.",tags:["civil-rights","nonviolent-resistance","sncc"]},
+        {id:"u6_4",term:"Civil Rights Act of 1964",definition:"Landmark legislation that prohibited discrimination based on race, color, religion, sex, or national origin in employment and public accommodations. It ended the legal basis for Jim Crow.",tags:["civil-rights","legislation","lbj","equality"]},
+        {id:"u6_5",term:"Voting Rights Act of 1965",definition:"A federal law that eliminated discriminatory voting practices (literacy tests, poll taxes) that had disenfranchised Black voters in the South for decades.",tags:["voting-rights","legislation","civil-rights","equality"]},
+        {id:"u6_6",term:"\"Letter from Birmingham Jail\" (1963)",definition:"Martin Luther King Jr.'s response to white clergymen who called his protests 'untimely.' King argued that the oppressed cannot wait for justice and that nonviolent direct action was morally necessary and strategically sound.",tags:["mlk","philosophy","nonviolent-resistance","civil-rights"]}
+      ],
+      quiz: [
+        {id:"u6_q1",question:"Brown v. Board of Education (1954) was significant because it:",choices:["Required all schools to integrate immediately within one year","Overturned 'separate but equal' and declared school segregation unconstitutional","Required busing to achieve school integration","Applied only to universities, not K–12 schools"],correctAnswer:1},
+        {id:"u6_q2",question:"What was the strategic goal of nonviolent direct action during the Civil Rights Movement?",choices:["To avoid any confrontation with white authorities","To provoke a violent response that would expose the injustice of segregation to national and international audiences","To slowly build political power through voter registration alone","To negotiate privately with Southern governors"],correctAnswer:1},
+        {id:"u6_q3",question:"The Voting Rights Act of 1965 addressed which specific obstacle that prevented Black voters from voting?",choices:["Violence at polling places by the KKK","Discriminatory practices like literacy tests and poll taxes","Gerrymandering that diluted Black voting power","Requirements that voters own property to participate"],correctAnswer:1},
+        {id:"u6_q4",question:"The Civil Rights Act of 1964 was primarily designed to:",choices:["End racial violence by the KKK","Prohibit discrimination in employment and public accommodations, ending the legal basis for Jim Crow","Guarantee equal pay for Black workers","Create affirmative action programs in federal agencies"],correctAnswer:1},
+        {id:"u6_q5",question:"In his 'Letter from Birmingham Jail,' what was King's main argument against waiting for 'the right time'?",choices:["Delay allowed time for more thorough preparation of the movement","The oppressed cannot afford to wait for justice — direct action was morally necessary now","Violence would be justified if peaceful protest continued to be ignored","Federal courts, not protests, were the proper path to change"],correctAnswer:1},
+        {id:"u6_q6",question:"The Montgomery Bus Boycott's 381-day success demonstrated:",choices:["That federal legislation was the only effective tool for civil rights","That economic pressure through organized nonviolent protest could defeat segregation","That the courts would quickly enforce desegregation","That the federal government actively supported the Civil Rights Movement"],correctAnswer:1}
+      ]
+    },
+
+    // ── EOC MIDTERM REVIEW ───────────────────────────
+    "eoc_midterm": {
+      id: "eoc_midterm",
+      type: "review",
+      courseUnit: "Midterm",
+      title: "Midterm EOC Review",
+      subtitle: "Cumulative review — Civil War through the Progressive Era",
+      hubLabel: "Study Flashcards",
+      reward: { firstPass:{gold:40,xp:20}, repeatPass:{gold:10,xp:0}, masteryThreshold:0.8, minQuestionsSeen:6 },
+      flashcards: [
+        {id:"eoc_1",term:"Continuity and Change",definition:"A historical thinking skill asking: What stayed the same across eras? What changed? Identifying both continuity and change reveals how history actually works — rarely as clean breaks, more often as layers.",tags:["historical-thinking","eoc"]},
+        {id:"eoc_2",term:"Causation",definition:"The historical thinking skill of identifying causes and effects across time. Historians distinguish between long-term causes (structural) and immediate triggers (events).",tags:["historical-thinking","eoc"]},
+        {id:"eoc_3",term:"Periodization",definition:"The practice of dividing history into defined time periods based on major changes. Historians debate where periods begin and end, reflecting their interpretations of what matters most.",tags:["historical-thinking","eoc"]},
+        {id:"eoc_4",term:"Primary Source",definition:"A document, artifact, or record created at the time of an event or by someone who directly participated in it (letters, speeches, photographs, government records, diaries).",tags:["historical-thinking","eoc","sources"]},
+        {id:"eoc_5",term:"Reconstruction Amendments",definition:"The 13th, 14th, and 15th Amendments passed after the Civil War. Together they abolished slavery, granted citizenship and equal protection, and prohibited denying the vote based on race.",tags:["reconstruction","amendments","eoc"]},
+        {id:"eoc_6",term:"The Cycle of Reform & Resistance",definition:"A recurring pattern in U.S. history in which reformers win legal or political victories, followed by a backlash from those who benefited from the old system — seen in Reconstruction, Progressivism, and Civil Rights.",tags:["pattern","historical-thinking","eoc"]}
+      ],
+      quiz: [
+        {id:"eoc_q1",question:"Which historical thinking skill asks: 'What caused this event, and what were its effects over time?'",choices:["Periodization","Causation","Continuity and Change","Contextualization"],correctAnswer:1},
+        {id:"eoc_q2",question:"A letter written by a Civil War soldier to his family is best described as:",choices:["A secondary source written from a historian's perspective","A primary source created by someone who directly participated in the event","A tertiary source useful for general overviews","An artifact that can't be used to understand historical thinking"],correctAnswer:1},
+        {id:"eoc_q3",question:"Which pattern BEST describes the aftermath of Reconstruction in the South?",choices:["Steady progress toward racial equality following the Civil War amendments","A cycle where civil rights gains were followed by violent resistance and rollback — Jim Crow replaced slavery","Immediate and complete integration of Southern society","Economic prosperity for formerly enslaved people through land redistribution"],correctAnswer:1},
+        {id:"eoc_q4",question:"The 14th Amendment's equal protection clause was designed to address which injustice?",choices:["Discrimination against women in the workplace","The Supreme Court's Dred Scott ruling that Black people couldn't be citizens","Poll taxes that prevented poor whites from voting","Religious discrimination in Southern states"],correctAnswer:1},
+        {id:"eoc_q5",question:"In U.S. history, which of these BEST illustrates the concept of 'continuity' across the Civil War era?",choices:["The abolition of slavery through the 13th Amendment","The persistence of racial inequality and white supremacy despite legal emancipation","The creation of new constitutional amendments","The destruction of the Southern plantation economy"],correctAnswer:1},
+        {id:"eoc_q6",question:"Progressive Era reforms like trust-busting and women's suffrage shared which common feature?",choices:["They were achieved primarily through violent protest","They were driven by a growing belief that government should regulate society to protect citizens' welfare","They were passed by Southern Democrats who controlled Congress","They relied on the Supreme Court to force change"],correctAnswer:1}
+      ]
+    }
+  }
+};
+
+// ══════════════════════════════════════════════════════
+//  APP STATE
+// ══════════════════════════════════════════════════════
+const SHELL_KEY = 'ac_shell_state';
+const SAVE_KEY  = 'ac_flashcard_state';
+
+let currentDeck   = null;
+let currentMode   = 'study'; // 'study' | 'quiz'
+let studyCards    = [];
+let studyIndex    = 0;
+let isFlipped     = false;
+let ratings       = {};       // cardId → 'easy'|'ok'|'hard'
+
+let quizQuestions = [];
+let quizIndex     = 0;
+let quizScore     = 0;
+let quizAnswers   = [];       // {correct, chosen, q}
+let quizAnswered  = false;
+
+// Shell state (shared with hub)
+let S = {};
+
+// ── Load hub save state ────────────────────────────
+function loadShellState() {
+  try {
+    const raw = localStorage.getItem(SHELL_KEY);
+    if (raw) S = JSON.parse(raw);
+    if (!S.gold)           S.gold = 0;
+    if (!S.xp)             S.xp = 0;
+    if (!S.vocabPassed)    S.vocabPassed = {};
+    if (!S.vocabBestScore) S.vocabBestScore = {};
+    if (!S.vocabFirstPass) S.vocabFirstPass = {};
+    if (!S.flashcardsStudied) S.flashcardsStudied = {};
+  } catch(e) { S = {gold:0,xp:0,vocabPassed:{},vocabBestScore:{},vocabFirstPass:{},flashcardsStudied:{}}; }
+}
+function saveShellState() {
+  try { localStorage.setItem(SHELL_KEY, JSON.stringify(S)); } catch(e) {}
+}
+
+// ══════════════════════════════════════════════════════
+//  BOOT
+// ══════════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  loadShellState();
+
+  const params = new URLSearchParams(window.location.search);
+  const deckId = params.get('deck');
+  const mode   = params.get('mode') || 'study';
+  const fromHub = params.get('from') === 'hub';
+
+  // Update back button
+  const backBtn = document.getElementById('back-btn');
+  if (fromHub) {
+    backBtn.href = document.referrer || 'javascript:history.back()';
+    backBtn.textContent = '← Back to Hub';
+  }
+
+  if (deckId && DECK_DATA.decks[deckId]) {
+    loadDeck(deckId, mode);
+  } else {
+    showDeckSelect();
+  }
+});
+
+// ══════════════════════════════════════════════════════
+//  DECK SELECT
+// ══════════════════════════════════════════════════════
+function showDeckSelect() {
+  hideAll();
+  document.getElementById('deck-select-screen').style.display = 'block';
+  document.getElementById('tb-name').textContent = 'Study Decks';
+  document.getElementById('tb-sub').textContent = '';
+  document.getElementById('mode-toggle').style.display = 'none';
+  renderDeckList('all');
+  renderDeckFilter();
+}
+
+let _deckFilter = 'all';
+function renderDeckFilter() {
+  const types = ['all', 'bridge', 'unit', 'review'];
+  const labels = {all:'All Decks', bridge:'Bridge', unit:'Unit', review:'Review'};
+  document.getElementById('deck-filter').innerHTML = types.map(t =>
+    `<button class="df-btn ${_deckFilter===t?'active':''}" onclick="filterDecks('${t}')">${labels[t]}</button>`
+  ).join('');
+}
+function filterDecks(type) {
+  _deckFilter = type;
+  renderDeckList(type);
+  renderDeckFilter();
+}
+function renderDeckList(filter) {
+  const decks = Object.values(DECK_DATA.decks);
+  const filtered = filter === 'all' ? decks : decks.filter(d => d.type === filter);
+  document.getElementById('deck-list').innerHTML = filtered.map(d => {
+    const passed = S.vocabPassed?.[d.id];
+    const cardCount = d.flashcards.length;
+    const qCount = d.quiz.length;
+    return `<div class="deck-card" onclick="loadDeck('${d.id}','study')">
+      ${passed ? '<div class="deck-passed-badge">✓ Passed</div>' : ''}
+      <div class="deck-card-type">${d.courseUnit} · ${d.type.toUpperCase()}</div>
+      <div class="deck-card-title">${d.title}</div>
+      <div class="deck-card-sub">${d.subtitle}</div>
+      <div class="deck-card-meta">
+        <span class="deck-tag">🃏 ${cardCount} cards</span>
+        <span class="deck-tag">⚡ ${qCount} questions</span>
+        <span class="deck-tag">🪙 ${d.reward.firstPass.gold}g</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  LOAD A DECK
+// ══════════════════════════════════════════════════════
+function loadDeck(deckId, mode) {
+  currentDeck = DECK_DATA.decks[deckId];
+  if (!currentDeck) { showDeckSelect(); return; }
+
+  // Update topbar
+  document.getElementById('tb-name').textContent = currentDeck.title;
+  document.getElementById('tb-sub').textContent  = currentDeck.subtitle;
+  document.getElementById('mode-toggle').style.display = 'flex';
+
+  // Set mode
+  currentMode = (mode === 'quiz') ? 'quiz' : 'study';
+  updateModeToggle();
+
+  if (currentMode === 'study') {
+    startStudy();
+  } else {
+    startQuiz();
+  }
+}
+
+function switchMode(mode) {
+  currentMode = mode;
+  updateModeToggle();
+  if (mode === 'study') startStudy();
+  else startQuiz();
+}
+
+function updateModeToggle() {
+  document.getElementById('mt-study').classList.toggle('active', currentMode === 'study');
+  document.getElementById('mt-quiz').classList.toggle('active', currentMode === 'quiz');
+}
+
+// ══════════════════════════════════════════════════════
+//  STUDY MODE
+// ══════════════════════════════════════════════════════
+function startStudy() {
+  hideAll();
+  document.getElementById('study-screen').style.display = 'block';
+  studyCards = [...currentDeck.flashcards];
+  studyIndex = 0;
+  isFlipped = false;
+  ratings = {};
+  renderCard();
+
+  // Mark as studied in shell state
+  if (!S.flashcardsStudied) S.flashcardsStudied = {};
+  S.flashcardsStudied[currentDeck.id] = true;
+  saveShellState();
+  notifyHub('flashcardsStudied', { deckId: currentDeck.id });
+}
+
+function renderCard() {
+  const card = studyCards[studyIndex];
+  if (!card) return;
+
+  // Reset flip
+  isFlipped = false;
+  const fc = document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+
+  document.getElementById('fc-term').textContent = card.term;
+  document.getElementById('fc-def').textContent  = card.definition;
+  document.getElementById('fc-tags').innerHTML   = (card.tags||[]).map(t =>
+    `<span class="fc-tag">${t}</span>`
+  ).join('');
+
+  // Progress
+  const pct = Math.round(((studyIndex + 1) / studyCards.length) * 100);
+  document.getElementById('study-prog-fill').style.width = pct + '%';
+  document.getElementById('study-count').textContent =
+    `Card ${studyIndex + 1} of ${studyCards.length}`;
+
+  // Nav buttons
+  document.getElementById('prev-btn').disabled = studyIndex === 0;
+  document.getElementById('next-btn').disabled = studyIndex === studyCards.length - 1;
+}
+
+function flipCard() {
+  isFlipped = !isFlipped;
+  document.getElementById('flashcard').classList.toggle('flipped', isFlipped);
+}
+function nextCard() { if (studyIndex < studyCards.length - 1) { studyIndex++; renderCard(); } }
+function prevCard() { if (studyIndex > 0) { studyIndex--; renderCard(); } }
+function shuffleCards() {
+  studyCards = [...studyCards].sort(() => Math.random() - .5);
+  studyIndex = 0;
+  renderCard();
+  notify('Deck shuffled!');
+}
+
+function rateCard(rating, e) {
+  const card = studyCards[studyIndex];
+  ratings[card.id] = rating;
+  // Visual feedback
+  e.target.style.transform = 'scale(.93)';
+  setTimeout(() => { e.target.style.transform = ''; }, 200);
+  // Auto-advance after rating
+  setTimeout(() => {
+    if (studyIndex < studyCards.length - 1) nextCard();
+    else notify('You\'ve reviewed all cards! Take the Vocab Check to earn Gold.');
+  }, 350);
+}
+
+// ══════════════════════════════════════════════════════
+//  QUIZ MODE
+// ══════════════════════════════════════════════════════
+function startQuiz() {
+  hideAll();
+  document.getElementById('quiz-screen').style.display = 'block';
+  quizQuestions = shuffleArray([...currentDeck.quiz]);
+  quizIndex     = 0;
+  quizScore     = 0;
+  quizAnswers   = [];
+  quizAnswered  = false;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = quizQuestions[quizIndex];
+  if (!q) return;
+
+  quizAnswered = false;
+  document.getElementById('quiz-feedback').style.display = 'none';
+  document.getElementById('quiz-next-btn').style.display = 'none';
+
+  // Header
+  document.getElementById('quiz-q-num').textContent = quizIndex + 1;
+  document.getElementById('quiz-q-of').textContent  = `of ${quizQuestions.length}`;
+  document.getElementById('quiz-live-score').textContent = quizScore;
+
+  // Progress
+  const pct = Math.round((quizIndex / quizQuestions.length) * 100);
+  document.getElementById('quiz-prog-fill').style.width = pct + '%';
+
+  // Question
+  document.getElementById('quiz-question').textContent = q.question;
+
+  // Choices — shuffle answer order but remember correct mapping
+  const letters = ['A','B','C','D'];
+  const indices = shuffleArray([0, 1, 2, 3].slice(0, q.choices.length));
+  const choicesHtml = indices.map((origIdx, displayIdx) =>
+    `<div class="quiz-choice" data-orig="${origIdx}" onclick="selectAnswer(${origIdx}, ${q.correctAnswer}, this)">
+      <span class="choice-letter">${letters[displayIdx]}</span>
+      <span>${q.choices[origIdx]}</span>
+    </div>`
+  ).join('');
+  document.getElementById('quiz-choices').innerHTML = choicesHtml;
+}
+
+function selectAnswer(chosen, correct, el) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+
+  const isCorrect = chosen === correct;
+  const q = quizQuestions[quizIndex];
+
+  // Style choices
+  document.querySelectorAll('.quiz-choice').forEach(c => {
+    c.classList.add('answered');
+    const origIdx = parseInt(c.getAttribute('data-orig'));
+    if (origIdx === correct) c.classList.add('correct');
+    else if (origIdx === chosen && !isCorrect) c.classList.add('wrong');
+  });
+
+  if (isCorrect) quizScore++;
+
+  quizAnswers.push({ correct: isCorrect, chosen, correctIdx: correct, q });
+
+  // Feedback
+  const fb = document.getElementById('quiz-feedback');
+  fb.className = `quiz-feedback ${isCorrect ? 'fb-correct' : 'fb-wrong'}`;
+  fb.textContent = isCorrect
+    ? `✓ Correct! ${q.choices[correct]}`
+    : `✗ The correct answer was: ${q.choices[correct]}`;
+  fb.style.display = 'block';
+
+  // Show next
+  const nextBtn = document.getElementById('quiz-next-btn');
+  nextBtn.style.display = 'block';
+  const isLast = quizIndex >= quizQuestions.length - 1;
+  nextBtn.querySelector('span').textContent = isLast ? 'See Results →' : 'Next Question →';
+}
+
+function nextQuestion() {
+  quizIndex++;
+  if (quizIndex >= quizQuestions.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  RESULTS
+// ══════════════════════════════════════════════════════
+function showResults() {
+  hideAll();
+  const d = currentDeck;
+  const total = quizQuestions.length;
+  const pct = Math.round((quizScore / total) * 100);
+  const threshold = d.reward.masteryThreshold || 0.8;
+  const passed = pct >= 60;
+  const fullReward = pct >= Math.round(threshold * 100);
+  const partialReward = pct >= 60 && !fullReward;
+
+  // Determine reward
+  let goldEarned = 0, xpEarned = 0, rewardMsg = '', rewardTier = '';
+  const wasFirstPass = !S.vocabPassed?.[d.id];
+
+  if (fullReward) {
+    const rw = wasFirstPass ? d.reward.firstPass : d.reward.repeatPass;
+    goldEarned = rw.gold || 0;
+    xpEarned   = rw.xp  || 0;
+    rewardTier = wasFirstPass ? 'firstPass' : 'repeatPass';
+    rewardMsg  = wasFirstPass
+      ? `First-time mastery — full reward!`
+      : `Mastery confirmed — reduced repeat reward.`;
+  } else if (partialReward) {
+    goldEarned = Math.round((d.reward.firstPass.gold || 0) * 0.5);
+    xpEarned   = 0;
+    rewardTier = 'partial';
+    rewardMsg  = `Partial credit — score between 60–79%.`;
+  } else {
+    rewardMsg = `Below 60% — no reward. Try again after reviewing the flashcards!`;
+  }
+
+  // Update shell state
+  if (!S.vocabPassed) S.vocabPassed = {};
+  if (!S.vocabBestScore) S.vocabBestScore = {};
+  if (!S.vocabFirstPass) S.vocabFirstPass = {};
+  if (!S.gold) S.gold = 0;
+  if (!S.xp)   S.xp   = 0;
+
+  if (passed) {
+    if (wasFirstPass) S.vocabFirstPass[d.id] = true;
+    S.vocabPassed[d.id] = true;
+  }
+  S.vocabBestScore[d.id] = Math.max(pct, S.vocabBestScore[d.id] || 0);
+  S.gold += goldEarned;
+  S.xp   += xpEarned;
+  saveShellState();
+
+  // Notify hub window
+  notifyHub('vocabReward', {
+    deckId: d.id,
+    gold: goldEarned,
+    xp: xpEarned,
+    score: pct,
+    passed
+  });
+
+  // Grade color
+  const gradeColor = pct >= 80 ? 'var(--green2)' : pct >= 60 ? 'var(--amber)' : 'var(--red2)';
+  const gradeEmoji = pct === 100 ? '🏛️' : pct >= 80 ? '🥇' : pct >= 60 ? '🥈' : '🔄';
+
+  // Breakdown
+  const breakdownHtml = quizAnswers.map((a, i) => `
+    <div class="rb-row">
+      <div class="rb-icon">${a.correct ? '✅' : '❌'}</div>
+      <div>
+        <div class="rb-q">${a.q.question}</div>
+        ${!a.correct ? `<div class="rb-ans rb-correct">✓ ${a.q.choices[a.correctIdx]}</div>` : ''}
+        ${!a.correct ? `<div class="rb-ans rb-wrong">✗ You chose: ${a.q.choices[a.chosen]}</div>` : ''}
+      </div>
+    </div>`).join('');
+
+  // Reward block HTML
+  let rewardHtml = '';
+  if (goldEarned > 0 || xpEarned > 0) {
+    rewardHtml = `<div class="reward-block">
+      <div class="reward-title">🎉 Reward Earned</div>
+      ${goldEarned > 0 ? `<div class="reward-row">
+        <div class="reward-icon">🪙</div>
+        <div>
+          <div class="reward-amount">+${goldEarned} Gold</div>
+          <div class="reward-desc">${rewardMsg}</div>
+        </div>
+      </div>` : ''}
+      ${xpEarned > 0 ? `<div class="reward-row">
+        <div class="reward-icon">⭐</div>
+        <div>
+          <div class="reward-amount" style="color:var(--amber)">+${xpEarned} XP</div>
+          <div class="reward-desc">XP banked to your profile</div>
+        </div>
+      </div>` : ''}
+      <div style="margin-top:8px;font-family:var(--dm);font-size:9px;color:var(--text3)">
+        Total Gold: <strong style="color:var(--gold)">${S.gold}</strong>
+        &nbsp;·&nbsp; Total XP: <strong style="color:var(--amber)">${S.xp}</strong>
+      </div>
+    </div>`;
+  } else {
+    rewardHtml = `<div class="no-reward-block">
+      <div style="font-family:var(--bebas);font-size:11px;color:var(--red2);letter-spacing:2px;margin-bottom:5px">No Reward This Time</div>
+      <div style="font-family:var(--dm);font-size:11px;color:var(--text2)">${rewardMsg}</div>
+    </div>`;
+  }
+
+  document.getElementById('results-screen').style.display = 'block';
+  document.getElementById('results-screen').innerHTML = `
+    <div class="results-hero">
+      <div style="font-size:42px;margin-bottom:6px">${gradeEmoji}</div>
+      <div class="results-grade" style="color:${gradeColor}">${pct}%</div>
+      <div class="results-label" style="color:${gradeColor}">${
+        pct===100?'PERFECT — HISTORIAN LEVEL':pct>=80?'MASTERY ACHIEVED':pct>=60?'PASSING SCORE':'KEEP STUDYING'
+      }</div>
+      <div class="results-score-row">${quizScore} of ${total} correct &nbsp;·&nbsp; ${d.title}</div>
+      ${passed ? '<div style="font-family:var(--bebas);font-size:10px;color:var(--green2);letter-spacing:2px;margin-top:6px">✓ Vocab Check Passed</div>' : ''}
+    </div>
+
+    ${rewardHtml}
+
+    <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:18px">
+      <button class="btn full" onclick="switchMode('study')"><span>🃏 Review Flashcards Again</span></button>
+      <button class="btn full blue" onclick="startQuiz()"><span>↺ Retake Quiz</span></button>
+      <a id="hub-return-btn" href="javascript:history.back()" style="text-decoration:none;display:block">
+        <button class="btn full green"><span>← Return to Hub</span></button>
+      </a>
+    </div>
+
+    <div class="sh">Question Breakdown</div>
+    <div class="results-breakdown">${breakdownHtml}</div>
+  `;
+
+  // Set return link
+  const returnBtn = document.getElementById('hub-return-btn');
+  if (returnBtn) returnBtn.href = document.referrer || 'javascript:history.back()';
+}
+
+// ══════════════════════════════════════════════════════
+//  HUB COMMUNICATION
+// ══════════════════════════════════════════════════════
+function notifyHub(type, data) {
+  try {
+    if (window.opener && !window.opener.closed) {
+      window.opener.postMessage({ type, ...data }, '*');
+    }
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type, ...data }, '*');
+    }
+  } catch(e) {}
+}
+
+// ══════════════════════════════════════════════════════
+//  UTILITIES
+// ══════════════════════════════════════════════════════
+function hideAll() {
+  ['deck-select-screen','study-screen','quiz-screen','results-screen']
+    .forEach(id => { document.getElementById(id).style.display = 'none'; });
+}
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function notify(msg) {
+  const n = document.createElement('div');
+  n.className = 'notif';
+  n.textContent = msg;
+  document.body.appendChild(n);
+  setTimeout(() => n.style.opacity = '0', 2700);
+  setTimeout(() => n.remove(), 3200);
+}
+</script>
+</body>
+</html>
