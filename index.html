@@ -515,20 +515,24 @@ function saveShellState() {
 // ══════════════════════════════════════════════════════
 //  BOOT
 // ══════════════════════════════════════════════════════
+// ── Hub URL ─────────────────────────────────────────
+// Set this to your hub's deployed URL so the ← Hub button always works:
+const HUB_URL = 'https://olsonjoshua-code.github.io/American-Chronicles/';
+// If the above is wrong, the button falls back to browser history automatically.
+
 window.addEventListener('load', () => {
   loadShellState();
 
   const params = new URLSearchParams(window.location.search);
   const deckId = params.get('deck');
   const mode   = params.get('mode') || 'study';
-  const fromHub = params.get('from') === 'hub';
 
-  // Update back button
+  // Back button: use referrer if available (hub opened this tab), else HUB_URL
   const backBtn = document.getElementById('back-btn');
-  if (fromHub) {
-    backBtn.href = document.referrer || 'javascript:history.back()';
-    backBtn.textContent = '← Back to Hub';
-  }
+  const referrer = document.referrer;
+  const hubHref = (referrer && referrer !== window.location.href) ? referrer : HUB_URL;
+  backBtn.href = hubHref;
+  backBtn.textContent = '← Hub';
 
   if (deckId && DECK_DATA.decks[deckId]) {
     loadDeck(deckId, mode);
@@ -912,7 +916,10 @@ function showResults() {
 
   // Set return link
   const returnBtn = document.getElementById('hub-return-btn');
-  if (returnBtn) returnBtn.href = document.referrer || 'javascript:history.back()';
+  if (returnBtn) {
+    const ref = document.referrer;
+    returnBtn.href = (ref && ref !== window.location.href) ? ref : HUB_URL;
+  }
 }
 
 // ══════════════════════════════════════════════════════
